@@ -411,72 +411,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://honglangdi.github.io/2021/06/23/MyBatis%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="洪浪迪">
-      <meta itemprop="description" content="热爱生活，敢想敢做，对技术多一份热爱">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="阿雨的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/23/MyBatis%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-06-23 13:48:32 / 修改时间：13:50:00" itemprop="dateCreated datePublished" datetime="2021-06-23T13:48:32+08:00">2021-06-23</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="MyBatis的配置文件"><a href="#MyBatis的配置文件" class="headerlink" title="MyBatis的配置文件"></a>MyBatis的配置文件</h1><h3>MyBatis的基本配置</h3>
-
-<h3>MyBatis的基本配置</h3>
-
-<h3>MyBatis的基本配置</h3>
-
-<h3>MyBatis的基本配置</h3>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://honglangdi.github.io/2021/06/22/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -539,6 +473,80 @@
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://honglangdi.github.io/2021/05/04/MyBatis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="洪浪迪">
+      <meta itemprop="description" content="热爱生活，敢想敢做，对技术多一份热爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿雨的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/04/MyBatis/" class="post-title-link" itemprop="url">MyBatis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-04 15:05:26" itemprop="dateCreated datePublished" datetime="2021-05-04T15:05:26+08:00">2021-05-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-23 21:55:53" itemprop="dateModified" datetime="2021-06-23T21:55:53+08:00">2021-06-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="transactionManager"><a href="#transactionManager" class="headerlink" title="transactionManager"></a>transactionManager</h2><p>transactionManager：mybatis提交事务，回顾事务的方式</p>
+<p>​    type：事务处理的类型</p>
+<p>​        1）JDBC：表示mybatis底层是调用JDBC中的Connection对象的，commit，rollback</p>
+<p>​        2）MANAGED：把mybatis的事务处理委托给其他的容器（一个服务器软件，一个框架（Spring））</p>
+<h2 id="DataSource"><a href="#DataSource" class="headerlink" title="DataSource"></a>DataSource</h2><p>DataSource：表示数据源，java体系中，规定了javax.sql.DataSource都是数据源，数据源都是connection对象</p>
+<p>​    type用来指定数据源的类型</p>
+<p>​    1）POOLED：使用连接池，mybatis会创建 PooledDataSource 类</p>
+<p>​    2）UPOOLED: 不使用连接池，每次执行 sql 的时候，先创建连接，再使用连接，最后关闭连接。</p>
+<p>​            不使用连接池，mybatis会创建一个 UnPooledDataSource 来管理 connection 对象的使用</p>
 
       
     </div>
@@ -625,7 +633,7 @@
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
