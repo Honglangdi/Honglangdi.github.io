@@ -118,7 +118,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">3</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
 
   </li>
   </ul>
@@ -144,6 +144,258 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://honglangdi.github.io/2022/05/03/MySQL%E7%B4%A2%E5%BC%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="洪浪迪">
+      <meta itemprop="description" content="热爱生活，敢想敢做，对技术多一份热爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿雨的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/03/MySQL%E7%B4%A2%E5%BC%95/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-03 13:09:52 / 修改时间：13:05:40" itemprop="dateCreated datePublished" datetime="2022-05-03T13:09:52+08:00">2022-05-03</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="MySQL索引"><a href="#MySQL索引" class="headerlink" title="MySQL索引"></a>MySQL索引</h1><p>[TOC]</p>
+<h2 id="一、数据库性能下降的问题"><a href="#一、数据库性能下降的问题" class="headerlink" title="一、数据库性能下降的问题"></a>一、数据库性能下降的问题</h2><h3 id="数据库性能下降的表现"><a href="#数据库性能下降的表现" class="headerlink" title="数据库性能下降的表现"></a>数据库性能下降的表现</h3><ol>
+<li>SQL慢</li>
+<li>执行时间长</li>
+<li>等待时间长</li>
+</ol>
+<h3 id="数据库性能下降的原因"><a href="#数据库性能下降的原因" class="headerlink" title="数据库性能下降的原因"></a>数据库性能下降的原因</h3><ol>
+<li><p>查询数据过多</p>
+</li>
+<li><p>关联了太多的表，太多<strong>join</strong></p>
+</li>
+<li><p>没有利用索引</p>
+<ol>
+<li><p>单值索引</p>
+</li>
+<li><p>复合索引</p>
+<p>条件多时，可以建共同索引（混合索引）。混合索引一般会优先使用。</p>
+<p>有些情况下，索引不一定会被使用</p>
+</li>
+</ol>
+</li>
+<li><p>服务器调优以及各个参数设置（缓冲、线程数等）**[不重要，由专门DBA负责]**</p>
+</li>
+</ol>
+<h2 id="二、常见的Join查询"><a href="#二、常见的Join查询" class="headerlink" title="二、常见的Join查询"></a>二、常见的Join查询</h2><h3 id="SQL执行顺序"><a href="#SQL执行顺序" class="headerlink" title="SQL执行顺序"></a>SQL执行顺序</h3><h4 id="手写"><a href="#手写" class="headerlink" title="手写"></a>手写</h4><p><img src="%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E6%89%8B%E5%86%99%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E5%9B%BE.jpg" alt="手写代码执行顺序图"></p>
+<h4 id="机读"><a href="#机读" class="headerlink" title="机读"></a>机读</h4><p><span style="color:red;font-size:20px;">注意：</span>  不同版本的SQL的执行顺序会有所不同</p>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5CSQL%E6%9C%BA%E8%AF%BB%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%E5%9B%BE.jpg" alt="SQL机读执行顺序图"></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5CSQL%E8%A7%A3%E6%9E%90%E5%9B%BE.jpg" alt="SQL解析图"></p>
+<h3 id="Join图"><a href="#Join图" class="headerlink" title="Join图"></a>Join图</h3><h4 id="joins图"><a href="#joins图" class="headerlink" title="joins图"></a>joins图</h4><p><img src="C:\Users\hongl\Desktop\‍\笔记\MySQL\MySQL_img\MySQL索引\JOINS图.jpg" alt="joins图"></p>
+<h4 id="共有与独有"><a href="#共有与独有" class="headerlink" title="共有与独有"></a>共有与独有</h4><h5 id="共有"><a href="#共有" class="headerlink" title="共有"></a>共有</h5><p>满足 students.id = classes.stuid 的叫共有</p>
+<h5 id="独有"><a href="#独有" class="headerlink" title="独有"></a>独有</h5><p>student表中所有不满足 students.id = classes.stuid 的叫连接关系的数据</p>
+<h3 id="建表SQL"><a href="#建表SQL" class="headerlink" title="建表SQL"></a>建表SQL</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `t_dept` (</span><br><span class="line"> `id` INT(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line"> `deptName` VARCHAR(30) DEFAULT NULL,</span><br><span class="line"> `address` VARCHAR(40) DEFAULT NULL,</span><br><span class="line"> PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;</span><br><span class="line"> </span><br><span class="line">CREATE TABLE `t_emp` (</span><br><span class="line"> `id` INT(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line"> `name` VARCHAR(20) DEFAULT NULL,</span><br><span class="line">  `age` INT(3) DEFAULT NULL,</span><br><span class="line"> `deptId` INT(11) DEFAULT NULL,</span><br><span class="line"> PRIMARY KEY (`id`),</span><br><span class="line"> KEY `fk_dept_id` (`deptId`)</span><br><span class="line"> #CONSTRAINT `fk_dept_id` FOREIGN KEY (`deptId`) REFERENCES `t_dept` (`id`)</span><br><span class="line">) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">INSERT INTO t_dept(deptName,address) VALUES(&#x27;华山&#x27;,&#x27;华山&#x27;);</span><br><span class="line">INSERT INTO t_dept(deptName,address) VALUES(&#x27;丐帮&#x27;,&#x27;洛阳&#x27;);</span><br><span class="line">INSERT INTO t_dept(deptName,address) VALUES(&#x27;峨眉&#x27;,&#x27;峨眉山&#x27;);</span><br><span class="line">INSERT INTO t_dept(deptName,address) VALUES(&#x27;武当&#x27;,&#x27;武当山&#x27;);</span><br><span class="line">INSERT INTO t_dept(deptName,address) VALUES(&#x27;明教&#x27;,&#x27;光明顶&#x27;);</span><br><span class="line"> INSERT INTO t_dept(deptName,address) VALUES(&#x27;少林&#x27;,&#x27;少林寺&#x27;);</span><br><span class="line"> </span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;风清扬&#x27;,90,1);</span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;岳不群&#x27;,50,1);</span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;令狐冲&#x27;,24,1);</span><br><span class="line"> </span><br><span class="line"> INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;洪七公&#x27;,70,2);</span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;乔峰&#x27;,35,2);</span><br><span class="line"> </span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;灭绝师太&#x27;,70,3);</span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;周芷若&#x27;,20,3);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;张三丰&#x27;,100,4);</span><br><span class="line"> </span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;张无忌&#x27;,25,5);</span><br><span class="line"> </span><br><span class="line">INSERT INTO t_emp(NAME,age,deptId) VALUES(&#x27;韦小宝&#x27;,18,null);</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="7种JOIN"><a href="#7种JOIN" class="headerlink" title="7种JOIN"></a>7种JOIN</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line"># 1 A、B两表共有</span><br><span class="line">select * from t_emp a inner join t_dept b on a.deptId = b.id;</span><br><span class="line"> </span><br><span class="line"># 2 A、B两表共有+A的独有</span><br><span class="line">select * from t_emp a left join t_dept b on a.deptId = b.id;</span><br><span class="line"> </span><br><span class="line"># 3 A、B两表共有+B的独有</span><br><span class="line"> select * from t_emp a right join t_dept b on a.deptId = b.id;</span><br><span class="line"> </span><br><span class="line"># 4 A的独有 </span><br><span class="line">select * from t_emp a left join t_dept b on a.deptId = b.id where b.id is null; </span><br><span class="line"> </span><br><span class="line"># 5 B的独有</span><br><span class="line">select * from t_emp a right join t_dept b on a.deptId = b.id where a.deptId is null;  </span><br><span class="line"> </span><br><span class="line"># 6 AB全有</span><br><span class="line">#MySQL Full Join的实现 因为MySQL不支持FULL JOIN,下面是替代方法</span><br><span class="line"> #left join + union(可去除重复数据)+ right join</span><br><span class="line"></span><br><span class="line">SELECT * FROM t_emp A LEFT JOIN t_dept B ON A.deptId = B.id</span><br><span class="line">UNION</span><br><span class="line">SELECT * FROM t_emp A RIGHT JOIN t_dept B ON A.deptId = B.id</span><br><span class="line"></span><br><span class="line">#这里因为要联合的缘故，不能考虑到小表驱动大表的情况。只能用right join。要保证查询出来的数字要一致。</span><br><span class="line"></span><br><span class="line"># 7 A的独有+B的独有</span><br><span class="line">        * FROM t_emp A LEFT JOIN t_dept B ON A.deptId = B.id WHERE B.`id` IS NULL</span><br><span class="line">UNION</span><br><span class="line">SELECT * FROM t_emp A RIGHT JOIN t_dept B ON A.deptId = B.id WHERE A.`deptId` IS NULL;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="子查询与Join区别："><a href="#子查询与Join区别：" class="headerlink" title="子查询与Join区别："></a>子查询与Join区别：</h3><h4 id="思想上的区别："><a href="#思想上的区别：" class="headerlink" title="思想上的区别："></a>思想上的区别：</h4><h5 id="子查询理解："><a href="#子查询理解：" class="headerlink" title="子查询理解："></a>子查询理解：</h5><p>①先知道需要查询并将数据拿出来(若from 后的表也是一个子查询结果)。②在去寻找满足判断条件的数据(where,on,having 后的参数等)。而这些查询条件通常是通过子查询获得的。</p>
+<p>子查询是一种根据结果找条件的倒推的顺序。比较好理解与判断<br>例题中：“人物”在t_emp 表中，所以第一个from 是t_emp 表。(也可以直接将子查询方法 from 后面(因为本题中的子查询中也有select 的数据),所以任然需要上述的推导过程)</p>
+<h5 id="join理解："><a href="#join理解：" class="headerlink" title="join理解："></a>join理解：</h5><p>执行完第一步后的结果为一张新表。在将新表与 t_emp 进行下一步的 left join 关联。<br>先推出如何获得条件，再像算数题一样一步一步往下 join。可以交换顺序，但只能是因为条件间不相互关联时才能交换顺序。<br>join 比 子查询难一点<br>join 能用到索引，但是子查询出来的表会使索引失效。</p>
+<h4 id="求所有人物对应的掌门"><a href="#求所有人物对应的掌门" class="headerlink" title="求所有人物对应的掌门:"></a>求所有人物对应的掌门:</h4><h5 id="t-dept-表"><a href="#t-dept-表" class="headerlink" title="t_dept 表"></a>t_dept 表</h5><p>id  deptName  address       CEO<br> 1       华山派          华山          2<br>…</p>
+<h5 id="t-emp-表"><a href="#t-emp-表" class="headerlink" title="t_emp 表"></a>t_emp 表</h5><p>id  name     age  deptId<br>1  风清扬     90         1<br>…</p>
+<h5 id="1-使用子查询-不推荐，影响后续用索引"><a href="#1-使用子查询-不推荐，影响后续用索引" class="headerlink" title="1.使用子查询(不推荐，影响后续用索引)"></a>1.使用子查询(不推荐，影响后续用索引)</h5><p>步骤：a.创建子查询  查询出每个门派对应的ceo<br>         b. 根据t_emp 对应的 deptId 关联子查询表查询出所有人物对应的 ceo</p>
+<p>SELECT a.name,f.deptName,f.name FROM t_emp a<br>LEFT JOIN (SELECT d.<code>id</code>,e.<code>name</code> ,d.<code>deptName</code> FROM t_dept d<br>LEFT JOIN t_emp e<br>ON d.<code>CEO</code>=e.<code>id</code>) f<br>ON a.deptId = f.id</p>
+<h5 id="2-使用join-推荐"><a href="#2-使用join-推荐" class="headerlink" title="2.使用join(推荐)"></a>2.使用join(推荐)</h5><p>步骤:a. 关联出每个人物对应的门派<br>       b.通过门派的 ceo 关联对应的掌门</p>
+<p>SELECT e.<code>name</code>, d.<code>deptName</code>,f.<code>name</code> ceo FROM t_dept d<br>RIGHT JOIN t_emp e<br>ON d.<code>id</code> = e.<code>deptId</code>   ##第一步 —&gt;得到关联了部门的一张新的联合表<br>LEFT JOIN t_emp f<br>ON d.<code>CEO</code>=f.<code>id</code>       ##第二步  —&gt;通过新的联合表中的数据与另一张表关联</p>
+<p>SELECT d.<code>deptName</code>, e.<code>name</code> CEO,d.<code>id</code>,f.name<br> FROM t_dept d<br>LEFT JOIN  t_emp e    //上述两个 join 交换了顺序并不影响执行。前提是两个 join 间不是依赖关系。且都跟<br>ON d.<code>CEO</code>=e.<code>id</code><br>LEFT JOIN t_emp f<br>ON f.deptId = d.<code>id</code></p>
+<h2 id="三、索引概念"><a href="#三、索引概念" class="headerlink" title="三、索引概念"></a>三、索引概念</h2><h3 id="官方定义"><a href="#官方定义" class="headerlink" title="官方定义"></a>官方定义</h3><p>MySQL官方对索引的定义为：<span style="color:red;">索引（Index） </span>是帮助MySQL高效获取数据的<strong>数据结构</strong>。</p>
+<p>可以得到索引的本质：<span style="color:red;">索引 是数据结构</span></p>
+<p>索引的目的在于提高查询效率</p>
+<h3 id="排好序的快速查找数据结构"><a href="#排好序的快速查找数据结构" class="headerlink" title="排好序的快速查找数据结构"></a><span style="color:red;">排好序的快速查找数据结构</span></h3><h4 id="详解（重要）"><a href="#详解（重要）" class="headerlink" title="详解（重要）"></a>详解（重要）</h4><p> 在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用（指向）数据，<br>这样就可以在这些数据结构上实现高级查找算法。这种数据结构，就是索引。下图就是一种可能的索引方式示例：</p>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E4%B8%80%E7%A7%8D%E5%8F%AF%E8%83%BD%E7%9A%84%E7%B4%A2%E5%BC%95%E6%96%B9%E5%BC%8F%E7%A4%BA%E4%BE%8B%E5%9B%BE.jpg" alt="一种可能的索引方式示例图"></p>
+<p>左边是数据表，一共有两列七条记录，最左边的是数据记录的物理地址<br> 为了加快Col2的查找，可以维护一个右边所示的二叉查找树，每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样就可以运用二叉查找在一定的复杂度内获取到相应数据，从而快速的检索出符合条件的记录。<br>二叉树弊端之一：二叉树很可能会发生两边不平衡的情况。<br>B-TREE: (B:balance)  会自动根据两边的情况自动调节，使两端无限趋近于平衡状态。可以使性能最稳定。(myisam使用的方式)<br>    B-TREE弊端：(<strong>插入/修改</strong>操作多时，B-TREE会不断调整平衡，消耗性能)从侧面说明了索引不是越多越好。<br><span style="color:red;"><strong>B+TREE:Innodb 所使用的索引</strong> </span> </p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p style="font-size:18px;color:purple">数据本身之外，数据库还维护着一个满足特定查找算法的数据结构，这些数据结构以某种方式指向数据，这样就可以在这些数据结构的基础上实现高级查找算法，这种数据结构就是索引。</p>
+
+
+
+<h3 id="索引的保存"><a href="#索引的保存" class="headerlink" title="索引的保存"></a>索引的保存</h3><p>一般来说，索引本身也很大，不可能全部存储在内存中，因此索引往往以索引文件的形式存储在磁盘上。</p>
+<h3 id="常见的索引"><a href="#常见的索引" class="headerlink" title="常见的索引"></a>常见的索引</h3><p><span style="color:red;">我们平常所说的索引，如果没有特别指明，都是指B树（多路搜索树，并不一定是二叉的）结构组织的索引。 </span> 其中<span style="color:blue;">聚集索引、次要索引、覆盖索引、复合索引、前缀索引、唯一索引</span>默认都是使用 <strong>B+树</strong>索引，统称索引。当然，除了B+树这种类型的索引之外，还有哈希索引（hash index）等。</p>
+<h2 id="四、索引的优势与劣势"><a href="#四、索引的优势与劣势" class="headerlink" title="四、索引的优势与劣势"></a>四、索引的优势与劣势</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li>通过索引查找数据库数据，可以提高数据检索的效率，降低数据库的IO成本。</li>
+<li>通过索引列对数据进行排序，降低数据排序的成本，降低了CPU的消耗。</li>
+</ol>
+<h3 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h3><ol>
+<li><p>索引实际上也是一张表，该表保存了主键和索引字段，并指向实体表的记录，所以索引列也是要占使用空间的</p>
+</li>
+<li><p>虽然索引列<span style="color:red;"> 大大提高了查询速度 </span> ，但同时却会<span style="color:red;"> 降低更新表的速度 </span> ，如对表进行 INSERT、UPDATE、DELETE。</p>
+<p>因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件每次更新之后添加了索引列的字段，都会调整因为更新所带来的键值变化后的索引信息。</p>
+</li>
+<li><p><span style="color:red;"><strong>索引只是提高效率的一个因素，如果你的MySQL有大数据量的表，就需要花费时间建立最优秀的索引，或优化查询语句</strong> </span> </p>
+</li>
+</ol>
+<h2 id="五、MySQL索引结构"><a href="#五、MySQL索引结构" class="headerlink" title="五、MySQL索引结构"></a>五、MySQL索引结构</h2><h3 id="BTree索引"><a href="#BTree索引" class="headerlink" title="BTree索引"></a>BTree索引</h3><p><span style="color:red;font-size:20px;"><strong>BTree索引——Myisam的普通索引</strong></span>  </p>
+<h4 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h4><p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5CBTree%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="BTree原理图.jpg"></p>
+<p>【初始化介绍】<br>一颗b树，浅蓝色的块我们称之为一个磁盘块，可以看到每个磁盘块包含几个<strong>数据项</strong>（深蓝色所示）和<strong>指针</strong>（黄色所示），<br>如磁盘块1包含数据项17和35，包含指针P1、P2、P3，<br>P1表示小于17的磁盘块，P2表示在17和35之间的磁盘块，P3表示大于35的磁盘块。<br><span style="color:red;"><strong>真实的数据存在于叶子节点</strong> </span> 真实的数据存在于叶子节点即3、5、9、10、13、15、28、29、36、60、75、79、90、99。<br><span style="color:red;">非叶子节点不存储真实的数据，只存储指引搜索方向的数据项 </span> ，如17、35并不真实存在于数据表中。</p>
+<p>【查找过程】<br>如果要查找数据项29，那么首先会把磁盘块1由磁盘加载到内存，此时发生一次IO，在内存中用二分查找确定29在17和35之间，锁定磁盘块1的P2指针，内存时间因为非常短（相比磁盘的IO）可以忽略不计，通过磁盘块1的P2指针的磁盘地址把磁盘块3由磁盘加载到内存，发生第二次IO，29在26和30之间，锁定磁盘块3的P2指针，通过指针加载磁盘块8到内存，发生第三次IO，同时内存中做二分查找找到29，结束查询，总计三次IO。</p>
+<h4 id="关于时间复杂度"><a href="#关于时间复杂度" class="headerlink" title="关于时间复杂度"></a>关于时间复杂度</h4><p>同一问题可用不同算法解决，而一个算法的质量优劣将影响到算法乃至程序的效率。算法分析的目的在于选择合适算法和改进算法。</p>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E4%B8%8D%E5%90%8C%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8D%E5%90%8C%E6%93%8D%E4%BD%9C%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%9B%BE.jpg" alt="不同数据结构不同操作的时间复杂度图"></p>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E4%B8%8D%E5%90%8C%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%8F%98%E5%8C%96%E8%B6%8B%E5%8A%BF%E5%9B%BE.jpg" alt="不同时间复杂度变化趋势图"></p>
+<p>1  N  logN 分别表示数据与查询次数之间的关系。<br>常数  1<em>c 表示查询最快的方式。查询次数不随数据的增加而增加<br>变量 N 表示查询次数随数据数量的增加而增加<br>对数 logN 表示查询次数与数据数量成对数关系。 介于常数与 N 之间。<br>n</em>logN 表示使用的复合方法。</p>
+<h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B+Tree索引"></a>B+Tree索引</h3><p><span style="color:red;font-size:20px;"><strong>B+Tree索引——innodb的普通索引</strong></span>  </p>
+<h4 id="原理图-1"><a href="#原理图-1" class="headerlink" title="原理图"></a>原理图</h4><p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5CB+Tree%E5%8E%9F%E7%90%86%E5%9B%BE.jpg" alt="B+Tree原理图"></p>
+<p>B+TREE 第二级的 数据并不能直接取出来，只作索引使用。在内存有限的情况下，查询效率高于 B-TREE<br>B-TREE 第二级可以直接取出来，树形结构比较重，在内存无限大的时候有优势。</p>
+<h4 id="B树和B-树的区别"><a href="#B树和B-树的区别" class="headerlink" title="B树和B+树的区别"></a>B树和B+树的区别</h4><p>B+Tree与B-Tree 的区别：结论在内存有限的情况下，B+TREE 永远比 B-TREE好。无限内存则后者方便</p>
+<p>　1）B-树的关键字和记录是放在一起的，叶子节点可以看作外部节点，不包含任何信息；B+树叶子节点中只有关键字和指向下一个节点的索引，记录只放在叶子节点中。(一次查询可能进行两次i/o操作)<br>　 2）在B-树中，越靠近根节点的记录查找时间越快，只要找到关键字即可确定记录的存在；而B+树中每个记录的查找时间基本是一样的，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的元素个数比B-树多，树高比B-树小，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？ </p>
+<ol>
+<li>B+树的磁盘读写代价更低<br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。 </li>
+<li>B+树的查询效率更加稳定<br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</li>
+</ol>
+<h3 id="聚簇索引与非聚簇索引"><a href="#聚簇索引与非聚簇索引" class="headerlink" title="聚簇索引与非聚簇索引"></a>聚簇索引与非聚簇索引</h3><p>聚簇索引并不是一种单独的索引类型，而是一种<strong>数据存储方式</strong>。<br>术语‘聚簇’表示<strong>数据行和相邻的键值进错的存储在一起</strong>。</p>
+<p>如下图，左侧的索引就是聚簇索引，因为数据行在磁盘的排列和索引排序保持一致。</p>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E4%B8%8E%E9%9D%9E%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E5%9B%BE.jpg" alt="聚簇索引与非聚簇索引图"></p>
+<h4 id="聚簇索引的好处："><a href="#聚簇索引的好处：" class="headerlink" title="聚簇索引的好处："></a>聚簇索引的好处：</h4><p>按照聚簇索引排列顺序，查询显示一定范围数据的时候，由于数据都是紧密相连，数据库不用从多个数据块中提取数据，所以节省了大量的io操作。</p>
+<h4 id="聚簇索引的限制："><a href="#聚簇索引的限制：" class="headerlink" title="聚簇索引的限制："></a>聚簇索引的限制：</h4><ul>
+<li>对于mysql数据库目前<strong>只有innodb数据引擎支持聚簇索引</strong>，而Myisam并不支持聚簇索引。</li>
+<li>由于数据物理存储排序方式只能有一种，所以每个Mysql的表只能有一个聚簇索引。一般情况下就是该表的<strong>主键</strong>。</li>
+<li><strong>为了充分利用聚簇索引的聚簇的特性，所以innodb表的主键列尽量选用有序的顺序id，而不建议用无序的id，比如uuid这种。（参考聚簇索引的好处。）</strong></li>
+</ul>
+<p> 这里说明了主键索引为何采用自增的方式：1、业务需求，有序。2、能使用到聚簇索引</p>
+<h3 id="full-text全文索引"><a href="#full-text全文索引" class="headerlink" title="full-text全文索引"></a>full-text全文索引</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>全文索引（也称全文检索）是目前搜索引擎使用的一种关键技术。它能够利用【分词技术】等多种算法智能分析出文本文字中关键词的频率和重要性，然后按照一定的算法规则智能地筛选出我们想要的搜索结果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `article` (</span><br><span class="line">  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `title` varchar(200) DEFAULT NULL,</span><br><span class="line">  `content` text,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  FULLTEXT KEY `title` (`title`,`content`)</span><br><span class="line">) ENGINE=MyISAM DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>不同于like方式的的查询：<br>SELECT * FROM article WHERE content LIKE ‘%查询字符串%’;<br>全文索引用match+against方式查询：<br>SELECT * FROM article WHERE MATCH(title,content) AGAINST (‘查询字符串’);</p>
+<p>明显的提高查询效率。</p>
+<h4 id="限制："><a href="#限制：" class="headerlink" title="限制："></a>限制：</h4><p>mysql5.6.4以前只有Myisam支持，5.6.4版本以后innodb才支持，但是官方版本不支持中文分词，需要第三方分词插件。<br>5.7以后官方支持中文分词。</p>
+<p>随着大数据时代的到来，关系型数据库应对全文索引的需求已力不从心，逐渐被 solr,elasticSearch等专门的搜索引擎所替代。</p>
+<h3 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h3><p>Hash索引只有Memory, NDB两种引擎支持，Memory引擎默认支持Hash索引，如果多个hash值相同，出现哈希碰撞，那么索引以链表方式存储。<br><strong>NoSql采用此中索引结构。</strong></p>
+<h3 id="R-Tree索引"><a href="#R-Tree索引" class="headerlink" title="R-Tree索引"></a>R-Tree索引</h3><p>R-Tree在mysql很少使用，仅支持geometry数据类型，支持该类型的存储引擎只有myisam、bdb、innodb、ndb、archive几种。</p>
+<p>相对于b-tree，r-tree的优势在于范围查找。</p>
+<h2 id="MySQL索引分类"><a href="#MySQL索引分类" class="headerlink" title="MySQL索引分类"></a>MySQL索引分类</h2><h3 id="主键索引"><a href="#主键索引" class="headerlink" title="主键索引"></a>主键索引</h3><h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p><strong>设定为主键后数据库会自动建立索引，innodb为聚簇索引。</strong></p>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),</span><br><span class="line">  PRIMARY KEY(id) </span><br><span class="line">);</span><br><span class="line"># unsigned (无符号的)</span><br><span class="line"># 使用  AUTO_INCREMENT 关键字的列必须有索引(只要有索引就行)。</span><br><span class="line"> </span><br><span class="line">CREATE TABLE customer2 (id INT(10) UNSIGNED   ,customer_no VARCHAR(200),customer_name VARCHAR(200),</span><br><span class="line">  PRIMARY KEY(id) </span><br><span class="line">);</span><br><span class="line"> </span><br><span class="line"># 单独建主键索引：</span><br><span class="line">ALTER TABLE customer </span><br><span class="line"> add PRIMARY KEY customer(customer_no);  </span><br><span class="line"> </span><br><span class="line"># 删除建主键索引：</span><br><span class="line">ALTER TABLE customer </span><br><span class="line"> drop PRIMARY KEY ;  </span><br><span class="line"> </span><br><span class="line"># 修改建主键索引：</span><br><span class="line"># 必须先删除掉(drop)原索引，再新建(add)索引</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="单值索引"><a href="#单值索引" class="headerlink" title="单值索引"></a>单值索引</h3><h4 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h4><p><strong>即一个索引只包含单个列（字段），一个表中可以有多个单列索引。</strong></p>
+<h4 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h4><p>索引建立成哪种索引类型？<br>根据数据引擎类型自动选择的索引类型<br>除开 <strong>innodb 引擎主键默认为聚簇索引</strong> 外。 <strong>innodb 的索引都采用的 B+TREE；</strong><br><strong>myisam 则都采用的 B-TREE索引</strong></p>
+<h4 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 随表一起建索引：</span><br><span class="line">CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),</span><br><span class="line">  PRIMARY KEY(id),</span><br><span class="line">  KEY (customer_name)  </span><br><span class="line">);</span><br><span class="line"># 随表一起建立的索引 索引名同 列名(customer_name)</span><br><span class="line"></span><br><span class="line"># 单独建单值索引：</span><br><span class="line">CREATE  INDEX idx_customer_name ON customer(customer_name); </span><br><span class="line"> </span><br><span class="line"># 删除索引：</span><br><span class="line">DROP INDEX idx_customer_name ;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><h4 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a>定义</h4><p><strong>索引列的值必须唯一，但允许有空值。</strong></p>
+<h4 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 随表一起建索引：</span><br><span class="line">CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),</span><br><span class="line">  PRIMARY KEY(id),</span><br><span class="line">  KEY (customer_name),</span><br><span class="line">  UNIQUE (customer_no)</span><br><span class="line">);</span><br><span class="line"># 建立 唯一索引时必须保证所有的值是唯一的（除了null），若有重复数据，会报错。  </span><br><span class="line"> </span><br><span class="line"># 单独建唯一索引：</span><br><span class="line">CREATE UNIQUE INDEX idx_customer_no ON customer(customer_no); </span><br><span class="line"> </span><br><span class="line"># 删除索引：</span><br><span class="line">DROP INDEX idx_customer_no on customer ;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="复合索引"><a href="#复合索引" class="headerlink" title="复合索引"></a>复合索引</h3><h4 id="复合索引和单值索引的区别"><a href="#复合索引和单值索引的区别" class="headerlink" title="复合索引和单值索引的区别"></a>复合索引和单值索引的区别</h4><p>复合索引：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create index idx_no_name on emp(no,name);  </span><br><span class="line"># no 与  name 有同一个索引 idx_no_name</span><br></pre></td></tr></table></figure>
+
+<p>单值索引：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create index idx_no on emp(no);</span><br><span class="line">create index idx_name on emp(name);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h4><p><strong>即一个索引包含多个列</strong></p>
+<h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h4><p>在数据库操作期间，复合索引比单值索引所需要的开销更小(对于相同的多个列建索引)<br>当表的行数远大于索引列的数目时可以使用复合索引</p>
+<h4 id="语法-3"><a href="#语法-3" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 随表一起建索引：</span><br><span class="line">CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),</span><br><span class="line">  PRIMARY KEY(id),</span><br><span class="line">  KEY (customer_name),</span><br><span class="line">  UNIQUE (customer_name),</span><br><span class="line">  KEY (customer_no,customer_name)</span><br><span class="line">);</span><br><span class="line"> </span><br><span class="line"># 单独建索引：</span><br><span class="line">CREATE  INDEX idx_no_name ON customer(customer_no,customer_name); </span><br><span class="line"> </span><br><span class="line"># 删除索引：</span><br><span class="line">DROP INDEX idx_no_name  on customer ;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><h4 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h4><p><span style="color:red;font-size:20px;font-weight:bold;">ALTER mytable ADD [UniQUE] INDEX [indexName] ON (columnname(length));</span>  </p>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p><span style="color:red;font-size:20px;font-weight:bold;"> DROP INDEX [indexName] ON mytable; </span>  </p>
+<h4 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h4><p><span style="color:red;font-size:20px;font-weight:bold;"> SHOW INDEX FROM table_naem\G </span>  </p>
+<p><strong>结果图：</strong></p>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E6%9F%A5%E7%9C%8B%E7%B4%A2%E5%BC%95%E7%BB%93%E6%9E%9C%E5%9B%BE.jpg" alt="SHOW INDEX FROM table_naem\G 查看索引结果图"></p>
+<p><strong>表中字段解析：</strong></p>
+<p> non_unique: 是否是唯一索引  1：是   0：不是<br>seq_in_index:列 在索引中的 序列。针对符合索引(一个索引对应多个列)。针对同一个复合索引 按照创建复合索引时的顺序进行排序<br>collation:<br>cardinality:<br>sub_part:<br>packed:<br>Null:是否允许 null 值<br>comment:<br>index_comment:</p>
+<h4 id="使用ALTER命令"><a href="#使用ALTER命令" class="headerlink" title="使用ALTER命令"></a>使用ALTER命令</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 有四种方式来添加数据表的索引：</span><br><span class="line">ALTER TABLE tbl_name ADD PRIMARY KEY (column_list);</span><br><span class="line"># 该语句添加一个主键，这意味着索引值必须是唯一的，且不能为NULL。</span><br><span class="line"> </span><br><span class="line">ALTER TABLE tbl_name ADD UNIQUE index_name (column_list);</span><br><span class="line"># 这条语句创建索引的值必须是唯一的（除了NULL外，NULL可能会出现多次）。</span><br><span class="line"> </span><br><span class="line">ALTER TABLE tbl_name ADD INDEX index_name (column_list);</span><br><span class="line"># 添加普通索引，索引值可出现多次。</span><br><span class="line"> </span><br><span class="line">ALTER TABLE tbl_name ADD FULLTEXT index_name (column_list);</span><br><span class="line"># 该语句指定了索引为 FULLTEXT ，用于全文索引。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="六、需要创建索引的情况"><a href="#六、需要创建索引的情况" class="headerlink" title="六、需要创建索引的情况"></a>六、需要创建索引的情况</h2><ol>
+<li><p>主键自动建立唯一索引</p>
+</li>
+<li><p>频繁作为<strong>查询条件</strong>的字段应该创建索引（where后面的语句）</p>
+</li>
+<li><p>查询中其与其他表关联的字段，外键关系建立索引</p>
+<p>A 表关联 B 表：A join B  。  on 后面的连接条件 既 A 表查询 B 表的条件。所以 B 表被关联的字段建立索引能大大提高查询效率<br>因为在 join 中，join 左边的表会用每一个字段去遍历 B 表的所有的关联数据，相当于一个查询操作</p>
+</li>
+<li><p>单键/组合索引的选择问题，<strong>在高并发下倾向创建组合索引</strong></p>
+</li>
+<li><p><strong>查询中排序的字段</strong>，排序字段若通过索引去访问将大大提高排序速度</p>
+<p>group by 和 order by 后面的字段有索引大大提高效率</p>
+</li>
+<li><p>查询中统计或者分组字段</p>
+</li>
+</ol>
+<h2 id="七、不需要创建索引的情况"><a href="#七、不需要创建索引的情况" class="headerlink" title="七、不需要创建索引的情况"></a>七、不需要创建索引的情况</h2><ol>
+<li><p>表记录太少</p>
+</li>
+<li><p>经常增删改的表 </p>
+<p>原因： 索引提高了查询速度，但同时会降低更新表的速度，如对表INSERT、UPDATE、DELETE。因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件。</p>
+</li>
+<li><p>Where条件里用不到的字段不创建索引，因为索引建多了影响 <strong>增删改 的效率</strong></p>
+</li>
+<li><p>数据重复且且分布均匀的表字段，因此应该只为最经常排序的数据建立索引。<span style="color:red;">注意， </span>如果某个数据列包含许多重复的内容，为它建立索引就没有太大的实际效果。</p>
+</li>
+</ol>
+<p><img src=".%5CMySQL_img%5CMySQL%E7%B4%A2%E5%BC%95%5C%E6%9F%90%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%88%97%E5%8C%85%E5%90%AB%E5%A4%A7%E9%87%8F%E9%87%8D%E5%A4%8D%E5%86%85%E5%AE%B9%E7%B4%A2%E5%BC%95%E6%95%88%E6%9E%9C%E5%9B%BE.jpg" alt="某个数据列包含大量重复内容索引效果图"></p>
+<p><span style="color:red;font-size:20px;font-weight:bold;"> ADD </span>  </p>
+<p><span style="color:red;font-size:20px;">注意：</span>  </p>
+<p><span style="color:red;">注意： </span> </p>
+<p><span style="color:blue;">注意： </span> </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -632,7 +884,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -664,7 +916,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
